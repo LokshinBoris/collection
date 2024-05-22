@@ -32,8 +32,7 @@ public abstract class CollectionTest {
 		Integer a=8;
 		Integer [] expected = {-20, 10, 1, 100, -5, 8};
 		   collection.add(a);
-		   Integer[] actual=collection.stream().toArray(Integer[]::new);
-		   assertArrayEquals(expected, actual);	
+		   runTest(expected);
 	}
 	@Test
 	void removeColTest()
@@ -41,8 +40,7 @@ public abstract class CollectionTest {
 		Integer [] expected = {-20, 10, 100, -5};
 		Integer a=1;
 		collection.remove(a);
-        Integer[] actual=collection.stream().toArray(Integer[]::new);
-	    assertArrayEquals(expected, actual);	
+        runTest(expected);
 	}
 	@Test
 	void containsTest()

@@ -29,8 +29,7 @@ import bbl.util.List;
 	   {
 		   Integer [] expected = {-20, -5, 10, 1, 100, -5};
 		   list.add(1, -5);
-		   Integer[] actual=list.stream().toArray(Integer[]::new);
-		   assertArrayEquals(expected, actual);
+		   runTest(expected);
 		   assertThrowsExactly(IndexOutOfBoundsException.class,	()->list.add(7,12));
 	   }
 	   
@@ -40,13 +39,11 @@ import bbl.util.List;
 		   Integer [] expected1 = {-20, 10, 1, 100};
 		   Integer [] expected2 = {-20, 1, 100};
 		   list.remove(4);
-		   Integer[] actual1=list.stream().toArray(Integer[]::new);
-		   assertArrayEquals(expected1, actual1);
+		   runTest(expected1);
 		   list.remove(list.get(1));
 		   Integer a = 10;
 		   list.remove(a);
-		   Integer[] actual2=list.stream().toArray(Integer[]::new);
-		   assertArrayEquals(expected2, actual2);
+		   runTest(expected2);
 		   assertThrowsExactly(IndexOutOfBoundsException.class,	()->list.remove(7));
 		   
 	   }

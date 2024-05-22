@@ -88,7 +88,7 @@ public class ArrayList<T> implements List<T> {
 	@Override
 	public T get(int index) 
 	{
-		if(index<0 || index>size)
+		if(index<0 || index>=size)
 		{
 			throw new IndexOutOfBoundsException(); 
 		}
@@ -98,7 +98,7 @@ public class ArrayList<T> implements List<T> {
 	@Override
 	public void add(int index, T obj) 
 	{
-		if(index<0 || index>size)
+		if(index<0 || index>=size)
 		{
 			throw new IndexOutOfBoundsException(); 
 		}
@@ -114,7 +114,7 @@ public class ArrayList<T> implements List<T> {
 	@Override
 	public T remove(int index) 
 	{
-		if(index<0 || index>size)
+		if(index<0 || index>=size)
 		{
 			throw new IndexOutOfBoundsException(); 
 		}
@@ -128,7 +128,7 @@ public class ArrayList<T> implements List<T> {
 	public int indexOf(T pattern)
 	{
 		int index=0;
-		while(index<size && !array[index].equals(pattern))
+		while(index<size && !equals(array[index],pattern))
 		{
 			index++;
 		}
@@ -139,11 +139,14 @@ public class ArrayList<T> implements List<T> {
 	public int lastindexOf(T pattern)
 	{
 		int index=size-1;
-		while(index>=0 && !array[index].equals(pattern))
+		while(index>=0 && !equals(array[index],pattern))
 		{
 			index--;
 		}
 		return index;
 	}
-
+	public static <T> boolean equals(T elem1, T elem2)
+	{
+		return elem1==null? elem1==elem2: elem1.equals(elem2);
+	}
 }
