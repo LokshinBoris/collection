@@ -60,5 +60,7 @@ import bbl.util.List;
 		   assertEquals(0,list.indexOf(c));
 		   assertEquals(4,list.lastindexOf(c));
 	   }
+	   
+	
 	}
 

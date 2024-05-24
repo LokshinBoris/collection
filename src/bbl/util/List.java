@@ -4,6 +4,14 @@ public interface List<T> extends Collection<T>
 {
 // return reference to an object at a given index
 // throws IndexOutOfBoundException for  either index<0 or index >= size()
+	static void checkIndex(int index, int maxValue, boolean exclusive) {
+		if (exclusive) {
+			maxValue--;
+		}
+		if(index < 0 || index > maxValue) {
+			throw new IndexOutOfBoundsException();
+		}
+	}
 	T get(int index);
 	/**
 	 * 
