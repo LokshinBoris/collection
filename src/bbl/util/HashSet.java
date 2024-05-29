@@ -32,7 +32,7 @@ public class HashSet<T> implements Set<T>
 				throw new NoSuchElementException();
 			}
 			if(hashTable[currentTableNum]==null) findNotNull();
-			Object ret=null;
+			T ret=null;
 			while(ret==null)
 			{
 				if(it.hasNext())
@@ -46,15 +46,12 @@ public class HashSet<T> implements Set<T>
 					findNotNull();
 				}
 			}
-			return (T)ret;
+			return ret;
 		}
 
 		private void findNotNull()
 		{
-			while(hashTable[currentTableNum]==null) 
-			{
-				currentTableNum++;				
-			}
+			while(hashTable[currentTableNum]==null) currentTableNum++;				
 			it=hashTable[currentTableNum].iterator();
 		}
 		
@@ -161,7 +158,13 @@ public class HashSet<T> implements Set<T>
 	public T get(T pattern)
 	{
 		T ret=null;
-		if(contains(pattern)) ret=pattern;
+		int index=getIndex(pattern,hashTable.length);
+		List<T> list=hashTable[index];
+		if(list!=null) 
+		{
+			int num=list.indexOf(pattern);
+			if(num>-1) ret=list.get(num);
+		}
 		return ret;
 	}
 
