@@ -22,7 +22,7 @@ public class LinkedList<T> implements List<T>
 	@Override
 	public boolean add(T obj) 
 	{
-		// O(N)
+		// O(1)
 		Node<T> node = new Node<>(obj);
 		addNode(size, node);
 		return true;	

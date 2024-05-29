@@ -10,7 +10,7 @@ import bbl.util.Collection;
 public abstract class CollectionTest {
 	protected Collection<Integer> collection;
 	Integer[] numbers = {-20, 10, 1, 100, -5};
-	
+	int newNumber=100000;
 	@BeforeEach
 	void setUp() {
 		for(Integer num: numbers) {
@@ -59,7 +59,21 @@ public abstract class CollectionTest {
 		assertEquals(4,collection.size());
 		Integer b=10;		
 		collection.add(b);
-		collection.add(b);
+		collection.add(b+1);
 		assertEquals(6,collection.size());
+	}
+	void addEqualedTest()
+	{
+		Integer[] expected = {-20, 10, 1, 100, -5, numbers[0]};
+		assertTrue(collection.add(numbers[0]));
+		runTest(expected);
+	}
+	@Test
+	void addUniqueTest()
+	{
+		
+		Integer[] expected = {-20, 10, 1, 100, -5, newNumber};
+		assertTrue(collection.add(newNumber));
+		runTest(expected);
 	}
 }
