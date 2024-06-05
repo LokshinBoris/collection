@@ -83,17 +83,13 @@ public class TreeSet<T> implements SortedSet<T>
 	private Node<T> getFirstGreaterParent(Node<T> current)
 	{
 		Node<T> parent=current.parent;
-		Node<T> ret= null;
+	
 		while(parent!=null && parent.right==current)
 		{
 			current=parent;
 			parent=current.parent;			
 		}
-		if (parent!=null)
-		{
-			ret=parent;
-		}
-		return ret;
+		return parent;
 	}
 	
 	public Node<T> getLeastFrom(Node<T> node)
@@ -184,11 +180,11 @@ public class TreeSet<T> implements SortedSet<T>
 		}
 		else
 		{ // both child's
-			removeFolk(node);
+			removeFork(node);
 		}
 	}
 	
-	private void removeFolk(Node<T> node)
+	private void removeFork(Node<T> node)
 	{
 		Node<T> newNode=getLeastFrom(node.right);
 		node.data=newNode.data;
