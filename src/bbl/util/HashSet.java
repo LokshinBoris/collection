@@ -18,7 +18,7 @@ public class HashSet<T> extends AbstractCollection<T> implements Set<T>
 		int currentTableNum=0;
 		Iterator<T> it=null; 
 		boolean flNext=false;
-		T prev=null;
+		Iterator<T> prevIt=null;
 		@Override
 		public boolean hasNext()
 		{
@@ -38,7 +38,8 @@ public class HashSet<T> extends AbstractCollection<T> implements Set<T>
 			{
 				if(it.hasNext())
 				{
-					ret=it.next();
+					prevIt=it;
+					ret=it.next();			
 					current++;
 				}
 				else
@@ -48,13 +49,12 @@ public class HashSet<T> extends AbstractCollection<T> implements Set<T>
 				}
 			}
 			flNext=true;
-			prev=ret;
 			return ret;
 		}
 
 		private void findNotNull()
 		{
-			while(hashTable[currentTableNum]==null) currentTableNum++;				
+			while(hashTable[currentTableNum]==null) currentTableNum++;
 			it=hashTable[currentTableNum].iterator();
 		}
 		
@@ -65,7 +65,8 @@ public class HashSet<T> extends AbstractCollection<T> implements Set<T>
 			{
 				throw new IllegalStateException();
 			}
-			HashSet.this.remove(prev);
+			prevIt.remove();
+			size--;
 			current--;
 			flNext=false;
 		}

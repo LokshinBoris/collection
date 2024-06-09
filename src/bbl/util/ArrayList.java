@@ -153,8 +153,8 @@ public class ArrayList<T> extends AbstractCollection<T> implements List<T> {
 			}
 		}
 		boolean ret=iTo!=size;
+		for(int i=iTo;i<size;i++) array[i]=null;
 		size=iTo;
-		for(int i=size;i<array.length;i++) array[i]=null;
 		return ret;
 	}
 }
