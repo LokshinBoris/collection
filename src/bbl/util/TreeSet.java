@@ -4,7 +4,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class TreeSet<T> implements SortedSet<T>
+public class TreeSet<T> extends AbstractCollection<T> implements SortedSet<T>
 {
 	private static class Node<T>
 	{
@@ -21,6 +21,8 @@ public class TreeSet<T> implements SortedSet<T>
 	private class TreeSetIterator implements Iterator<T>
 	{
 		Node<T> current=getLeastFrom(root);
+		boolean flNext=false;
+		Node<T> prev=null;
 		@Override
 		public boolean hasNext() 
 		{			
@@ -35,13 +37,25 @@ public class TreeSet<T> implements SortedSet<T>
 				throw new NoSuchElementException();
 			}
 			 T res=current.data;
+			 prev=current;
+			 flNext=true;
 			 current=getCurrent(current);
 			 return res;
 		}
 		
+		@Override
+		public void remove()
+		{
+			if(!flNext)
+			{
+				throw new IllegalStateException();
+			}
+			if(prev!=null) TreeSet.this.removeNode(prev);
+			flNext=false;
+		}
+		
 	}
 	Node<T> root;
-	int size;
 	private Comparator<T> comp;
 	public TreeSet(Comparator<T> comp) {
 		this.comp = comp;
@@ -161,8 +175,7 @@ public class TreeSet<T> implements SortedSet<T>
 		if(node!=null)
 		{
 			removeNode(node);
-			ret=true;
-			size--;
+			ret=true;			
 		}
 		return ret;
 	}
@@ -182,13 +195,14 @@ public class TreeSet<T> implements SortedSet<T>
 		{ // both child's
 			removeFork(node);
 		}
+		size--;
 	}
 	
 	private void removeFork(Node<T> node)
 	{
-		Node<T> newNode=getLeastFrom(node.right);
+		Node<T> newNode=getGreatesFrom(node.left);
 		node.data=newNode.data;
-		if(newNode.right==null) removeLeaf(newNode);
+		if(newNode.left==null) removeLeaf(newNode);
 		else removeInChain(newNode);
 	}
 	
@@ -209,15 +223,7 @@ public class TreeSet<T> implements SortedSet<T>
 			else node.parent.right=newNode;
 		}
 		eraseNode(node);		
-	}
-	
-	private void eraseNode(Node<T> node) 
-	{
-		node.parent=null;
-		node.left=null;
-		node.right=null;
-		node.data=null;	
-	}
+	}	
 	
 	private void removeLeaf(Node<T> node)
 	{
@@ -230,15 +236,17 @@ public class TreeSet<T> implements SortedSet<T>
 		eraseNode(node);
 	}
 	
+	private void eraseNode(Node<T> node) 
+	{
+		node.parent=null;
+		node.left=null;
+		node.right=null;
+		node.data=null;	
+	}
 	
 	@Override
 	public boolean contains(T pattern) {
 		return getNode(pattern) != null;
-	}
-
-	@Override
-	public int size() {
-		return size;
 	}
 
 	@Override

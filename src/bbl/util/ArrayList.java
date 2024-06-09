@@ -3,10 +3,11 @@ package bbl.util;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.function.Predicate;
 
-public class ArrayList<T> implements List<T> {
+public class ArrayList<T> extends AbstractCollection<T> implements List<T> {
 	private static final int DEFAULT_CAPACITY = 16;
-	private int size;
+	
 	private T[] array;
 	@SuppressWarnings("unchecked")
 	public ArrayList(int capacity)
@@ -20,6 +21,7 @@ public class ArrayList<T> implements List<T> {
 	private class ArrayListIterator implements Iterator<T>
 	{
 		private int current=0;
+		boolean flNext=false;
 		@Override
 		public boolean hasNext() 
 		{
@@ -33,7 +35,19 @@ public class ArrayList<T> implements List<T> {
 			{
 				throw new NoSuchElementException();
 			}
+			flNext=true;
 			return array[current++];
+		}
+		
+		@Override
+		public void remove()
+		{
+			if(!flNext)
+			{
+				throw new IllegalStateException();
+			}
+			ArrayList.this.remove(--current);
+			flNext=false;
 		}
 		
 	}
@@ -51,32 +65,6 @@ public class ArrayList<T> implements List<T> {
 	private void allocate()
 	{
 		array=Arrays.copyOf(array,array.length*2);	
-	}
-	@Override
-	public boolean remove(T pattern)
-	{
-		int index=indexOf(pattern);
-		boolean res=false;
-		if(index>-1)
-			{
-			res=true;
-			remove(index);
-			}
-		return res;
-	}
-	
-
-	
-	@Override
-	public boolean contains(T pattern)
-	{
-		return indexOf(pattern)>-1;		
-	}
-
-	@Override
-	public int size() 
-	{
-		return size;
 	}
 
 	@Override
@@ -148,5 +136,25 @@ public class ArrayList<T> implements List<T> {
 	public static <T> boolean equals(T elem1, T elem2)
 	{
 		return elem1==null? elem1==elem2: elem1.equals(elem2);
+	}
+	
+	@Override
+	public boolean removeIf(Predicate<T> predicate)
+	{
+		//Two indexes one array
+		// no allocation for new array
+		int iTo=0;
+		for(int iFrom=0;iFrom<size;iFrom++)
+		{
+			if(!predicate.test(array[iFrom]))
+			{
+				array[iTo]=array[iFrom];
+				iTo++;
+			}
+		}
+		boolean ret=iTo!=size;
+		size=iTo;
+		for(int i=size;i<array.length;i++) array[i]=null;
+		return ret;
 	}
 }
