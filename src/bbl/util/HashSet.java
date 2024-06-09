@@ -65,7 +65,7 @@ public class HashSet<T> extends AbstractCollection<T> implements Set<T>
 			{
 				throw new IllegalStateException();
 			}
-			if(prev!=null) HashSet.this.remove(prev);
+			HashSet.this.remove(prev);
 			current--;
 			flNext=false;
 		}

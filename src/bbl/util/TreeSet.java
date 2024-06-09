@@ -50,7 +50,7 @@ public class TreeSet<T> extends AbstractCollection<T> implements SortedSet<T>
 			{
 				throw new IllegalStateException();
 			}
-			if(prev!=null) TreeSet.this.removeNode(prev);
+			TreeSet.this.removeNode(prev);
 			flNext=false;
 		}
 		

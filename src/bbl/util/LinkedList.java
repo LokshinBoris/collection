@@ -66,11 +66,7 @@ public class LinkedList<T> extends AbstractCollection<T> implements List<T>
 				throw new IllegalStateException();
 			}
 			if(current==null) LinkedList.this.remove(tail);
-			else
-			{
-				Node<T> removed=current.prev;
-				LinkedList.this.remove(removed);
-			}
+			else LinkedList.this.remove(current.prev);
 			flNext=false;
 		}
 	}
