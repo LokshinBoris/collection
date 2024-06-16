@@ -4,7 +4,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
 import bbl.util.TreeSet;
@@ -12,8 +12,8 @@ import bbl.util.TreeSet;
 public class TreeSetTest extends SortedSetTest
 {
 	TreeSet<Integer> treeSet;
-	@BeforeEach
 	@Override
+	@BeforeEach	
 	void setUp()
 	{
 		collection = new TreeSet<Integer>(); 
@@ -25,7 +25,7 @@ public class TreeSetTest extends SortedSetTest
 	public void displayRootChildrenTest()
 	{
 
-		setUp();
+
 
 		treeSet.setSpacesPerLevel(4);
 		treeSet.displayRootChildren();
@@ -34,7 +34,7 @@ public class TreeSetTest extends SortedSetTest
 	@Test
 	public void treeInversionTest()
 	{
-		setUp();
+	
 		
 		treeSet.treeInversion();
 		Integer[] expected= {100,10,1,-5,-20};
@@ -51,7 +51,7 @@ public class TreeSetTest extends SortedSetTest
 	@Test
 	public void displayTreeRotatedTest()
 	{
-		setUp();
+
 		
 		treeSet.setSpacesPerLevel(4);
 		treeSet.displayTreeRotated();
@@ -61,7 +61,7 @@ public class TreeSetTest extends SortedSetTest
 	@Test
 	public void widthTest()
 	{
-		setUp();
+	
 		
 		assertEquals(2,treeSet.width());
 	}
@@ -69,7 +69,7 @@ public class TreeSetTest extends SortedSetTest
 	@Test
 	public void heightTest()
 	{
-		setUp();
+	
 		
 		assertEquals(4,treeSet.height());
 	}
