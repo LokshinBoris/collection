@@ -18,7 +18,7 @@ public abstract class CollectionTest {
 	protected Collection<Integer> collection;
 	Integer[] numbers = {-20, 10, 1, 100, -5};
 	int newNumber=100000;
-	private static final int N_ELEMENTS = 1_048_575;
+	public static final int N_ELEMENTS = 1_048_575;
 	private static final int N_RUNS = 1000000;
 	@BeforeEach
 	void setUp() {
@@ -110,6 +110,7 @@ public abstract class CollectionTest {
 			actual[index++] = num;
 		}
 		assertEquals(N_ELEMENTS, index);
+		
 		if(collection instanceof List) {
 			System.out.println("Performance test of method \"contains\" for all List objects takes huge time");
 		} else {
@@ -119,7 +120,7 @@ public abstract class CollectionTest {
 		}
 		
 	}
-	private void createBigRandomCollection(Random random) {
+	protected void createBigRandomCollection(Random random) {
 		int[] randomNumbers = random.ints().distinct().limit(N_ELEMENTS).toArray();
 		for(Integer num: numbers) {
 			collection.remove(num);
@@ -146,4 +147,5 @@ public abstract class CollectionTest {
 		createBigRandomCollection(new Random());
 		collection.clear();
 	}
+	
 }
