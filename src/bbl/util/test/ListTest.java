@@ -58,7 +58,7 @@ import bbl.util.List;
 		   assertEquals(-1,list.indexOf(b));
 		   list.add(4, c);
 		   assertEquals(0,list.indexOf(c));
-		   assertEquals(4,list.lastindexOf(c));
+		   assertEquals(4,list.lastIndexOf(c));
 	   }
 	   
 	

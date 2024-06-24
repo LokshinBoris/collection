@@ -124,7 +124,7 @@ public class ArrayList<T> extends AbstractCollection<T> implements List<T> {
 	}
 
 	@Override
-	public int lastindexOf(T pattern)
+	public int lastIndexOf(T pattern)
 	{
 		int index=size-1;
 		while(index>=0 && !equals(array[index],pattern))
@@ -157,4 +157,5 @@ public class ArrayList<T> extends AbstractCollection<T> implements List<T> {
 		size=iTo;
 		return ret;
 	}
+	
 }

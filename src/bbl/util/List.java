@@ -42,7 +42,7 @@ public interface List<T> extends Collection<T>
 	 * @return index for last occurrence of an object equaled to a given pattern
 	 * otherwise -1
 	 */
-	int lastindexOf(T pattern);
+	int lastIndexOf(T pattern);
 	@Override
 	default boolean remove(T pattern)
 	{

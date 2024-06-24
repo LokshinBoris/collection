@@ -5,179 +5,158 @@ import java.util.NoSuchElementException;
 
 
 
-public class HashSet<T> extends AbstractCollection<T> implements Set<T> 
-	{
+@SuppressWarnings("unchecked")
+public class HashSet<T> extends AbstractCollection<T> implements Set<T> {
 	private static final int DEFAULT_HASH_TABLE_LENGTH = 16;
 	private static final float DEFAULT_FACTOR = 0.75f;
-	List<T> [] hashTable;
+	List<T>[] hashTable;
 	float factor;
-	 
-	private class HashSetIterator  implements Iterator <T>
-	{
-		int current=0;
-		int currentTableNum=0;
-		Iterator<T> it=null; 
-		boolean flNext=false;
-		Iterator<T> prevIt=null;
-		@Override
-		public boolean hasNext()
-		{
-			return current<size;
+
+	private class HashSetIterator implements Iterator<T> {
+		Iterator<T> iterator;
+		Iterator<T> prevIterator;
+		int iteratorIndex;
+
+		HashSetIterator() {
+			iteratorIndex = 0;
+			iterator = getIterator(0);
+			setIteratorIndex();
 		}
 
-		@SuppressWarnings("unchecked")
+		private Iterator<T> getIterator(int index) {
+			List<T> list = hashTable[index];
+			return list == null ? null : list.iterator();
+		}
+
+		@Override
+		public boolean hasNext() {
+
+			return iteratorIndex < hashTable.length;
+		}
+
 		@Override
 		public T next() {
-			if(!hasNext())
-			{
+			if (!hasNext()) {
 				throw new NoSuchElementException();
 			}
-			if(hashTable[currentTableNum]==null) findNotNull();
-			T ret=null;
-			while(ret==null)
-			{
-				if(it.hasNext())
-				{
-					prevIt=it;
-					ret=it.next();			
-					current++;
-				}
-				else
-				{
-					currentTableNum++;
-					findNotNull();
-				}
-			}
-			flNext=true;
-			return ret;
+			prevIterator = iterator;
+			T res = iterator.next();
+			setIteratorIndex();
+			return res;
 		}
 
-		private void findNotNull()
-		{
-			while(hashTable[currentTableNum]==null) currentTableNum++;
-			it=hashTable[currentTableNum].iterator();
+		private void setIteratorIndex() {
+			int limit = hashTable.length - 1; // for not doing checking index inside iteration
+			while (iteratorIndex < limit && (iterator == null || !iterator.hasNext())) {
+				iteratorIndex++;
+				iterator = getIterator(iteratorIndex);
+			}
+			if (iteratorIndex == limit && (hashTable[iteratorIndex] == null || !iterator.hasNext())) {
+				iteratorIndex++;
+			}
 		}
-		
 		@Override
-		public void remove()
-		{
-			if(!flNext)
-			{
+		public void remove() {
+			if(prevIterator == null) {
 				throw new IllegalStateException();
 			}
-			prevIt.remove();
+			prevIterator.remove();
 			size--;
-			current--;
-			flNext=false;
+			prevIterator = null;
 		}
-		
 
-		
 	}
-	@SuppressWarnings("unchecked")
-	public HashSet(int hashTableLength, float factor) 
-	{
+
+	public HashSet(int hashTableLength, float factor) {
 		hashTable = new List[hashTableLength];
-		this.factor=factor;
+		this.factor = factor;
 	}
-	
-	public HashSet()
-	{
+
+	public HashSet() {
 		this(DEFAULT_HASH_TABLE_LENGTH, DEFAULT_FACTOR);
 	}
-	@Override
-	public Iterator<T> iterator()
-	{	
-		return new HashSetIterator();
-	}
 
 	@Override
-	public boolean add(T obj)
-	{
-		boolean res=false;
-		if(!contains(obj))
-		{
-			if((float)size/hashTable.length>=factor)
-			{
+	public boolean add(T obj) {
+		boolean res = false;
+		if (!contains(obj)) {
+			if ((float) size / hashTable.length >= factor) {
 				hashTableReallocation();
 			}
-			addObjInHashTable(obj,hashTable);
+			addObjInHashTable(obj, hashTable);
 			size++;
-			res=true;
+			res = true;
 		}
+
 		return res;
 	}
 
-	private void hashTableReallocation() 
-	{
-		@SuppressWarnings("unchecked")
-		List<T> [] tmp=new List[hashTable.length*2];
-		for(List<T> list: hashTable)
-		{
-			if(list!=null)
-			{
-				for(T obj:list)
-				{
-					addObjInHashTable(obj,tmp);
+	private void hashTableReallocation() {
+		List<T>[] tmp = new List[hashTable.length * 2];
+		for (List<T> list : hashTable) {
+			if (list != null) {
+				for (T obj : list) {
+					addObjInHashTable(obj, tmp);
 				}
 			}
 		}
-		hashTable=tmp;
+		hashTable = tmp;
+
 	}
 
-	private void addObjInHashTable(T obj, List<T> [] table) 
-	{
-		int index=getIndex(obj,table.length);
-		List<T> list=table[index];
-		if (list==null)
-		{
-			list=new LinkedList<>();
-			table[index]=list;
+	private void addObjInHashTable(T obj, List<T>[] table) {
+		int index = getIndex(obj, table.length);
+		List<T> list = table[index];
+		if (list == null) {
+			list = new LinkedList<>();
+			table[index] = list;
 		}
 		list.add(obj);
+
 	}
 
-	private int getIndex(T obj, int modul) 
-	{
-		int hashCode=obj.hashCode();
-		int index=Math.abs(hashCode%modul);
+	private int getIndex(T obj, int length) {
+		int hashCode = obj.hashCode();
+		int index = Math.abs(hashCode % length);
 		return index;
 	}
 
 	@Override
-	public boolean remove(T pattern)
-	{
-		boolean ret=false;
-		int index=getIndex(pattern,hashTable.length);
-		List <T> list = hashTable[index];
-		if(list!=null)
-		{
-			ret=list.remove(pattern);
-			if(list.size()==0) hashTable[index]=null;
+	public boolean remove(T pattern) {
+		boolean res = contains(pattern);
+		if (res) {
+			int index = getIndex(pattern, hashTable.length);
+			hashTable[index].remove(pattern);
+			size--;
 		}
-		size--;
-		return ret;
+		return res;
 	}
 
 	@Override
 	public boolean contains(T pattern) {
-		int index=getIndex(pattern,hashTable.length);
-		List<T> list=hashTable[index];
-		return list!=null && list.contains(pattern);
+		int index = getIndex(pattern, hashTable.length);
+		List<T> list = hashTable[index];
+		return list != null && list.contains(pattern);
+	}
+
+	
+	@Override
+	public Iterator<T> iterator() {
+
+		return new HashSetIterator();
 	}
 
 	@Override
-	public T get(T pattern)
-	{
-		T ret=null;
-		int index=getIndex(pattern,hashTable.length);
-		List<T> list=hashTable[index];
-		if(list!=null) 
-		{
-			int num=list.indexOf(pattern);
-			if(num>-1) ret=list.get(num);
+	public T get(T pattern) {
+		T res = null;
+		if (contains(pattern)) {
+			int index = getIndex(pattern, hashTable.length);
+			List<T> list = hashTable[index];
+			int indexInList = list.indexOf(pattern);
+			res = list.get(indexInList);
+
 		}
-		return ret;
+		return res;
 	}
 
 }
